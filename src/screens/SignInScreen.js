@@ -6,8 +6,9 @@ import Title from '../components/Title';
 import Label from '../components/forms/Label';
 import Email from '../components/forms/Email';
 import Password from '../components/forms/Password';
+import {connect} from 'react-redux';
 
-export default class SignIn extends Component {
+class SignInScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,35 +22,9 @@ export default class SignIn extends Component {
     this.passwordInput.current.focus();
   }
 
-  async fetchAuth() {
-    const data = {
-      strategy: 'local',
-      email: this.state.email,
-      password: this.state.password,
-    };
-
-    const options = {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(data),
-    };
-
-    console.log(options);
-
-    try {
-      // const result = await Feathers.service('users').find({});
-      const response = await fetch(
-        'http://192.168.100.10:3030/authentication',
-        options,
-      );
-      const result = await response.json();
-      console.log('result', result);
-    } catch (error) {
-      console.warn(error);
-    }
-  }
-
   async handleSubmit() {
+    const {navigation, signIn} = this.props;
+
     const data = {
       strategy: 'local',
       email: this.state.email,
@@ -57,7 +32,8 @@ export default class SignIn extends Component {
     };
 
     try {
-      const result = await api.authenticate(data);
+      await api.authenticate(data);
+      signIn(true);
     } catch (error) {
       console.error(error);
     }
@@ -93,6 +69,16 @@ export default class SignIn extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({});
+const mapDispatchToProps = dispatch => ({
+  signIn: value => dispatch({type: 'SET_SIGN_IN', value}),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(SignInScreen);
 
 const styles = StyleSheet.create({
   container: {},

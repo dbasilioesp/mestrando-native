@@ -5,7 +5,7 @@
  * @format
  * @flow strict-local
  */
-
+import 'react-native-gesture-handler';
 import React from 'react';
 import {
   SafeAreaView,
@@ -15,32 +15,25 @@ import {
   Text,
   StatusBar,
 } from 'react-native';
-import SignIn from './pages/SignIn';
+import {Provider} from 'react-redux';
+import {NavigationContainer} from '@react-navigation/native';
+import Store from './store';
+import Router from './Router';
 
-class App extends React.Component {
+export default class App extends React.Component {
   render() {
-    return (
-      <>
-        {/* <StatusBar barStyle="dark-content" /> */}
+    let isSignedIn = false;
 
-        <SafeAreaView>
-          <ScrollView
-            contentInsetAdjustmentBehavior="automatic"
-            style={styles.scrollView}>
-            <SignIn />
-          </ScrollView>
-        </SafeAreaView>
-      </>
+    return (
+      // <SafeAreaView>
+      //   <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.scrollView}>
+      <Provider store={Store}>
+        <NavigationContainer>
+          <Router />
+        </NavigationContainer>
+      </Provider>
+      //   </ScrollView>
+      // </SafeAreaView>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  scrollView: {},
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-});
-
-export default App;

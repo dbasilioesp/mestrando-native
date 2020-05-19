@@ -23,7 +23,7 @@ class Rest {
 
   async find(params) {
     const options = this.createOptions({method: 'GET'});
-    let args = params ? '?' + new URLSearchParams(params).toString() : '';
+    let args = params ? '?' + new URLSearchParams(params.query).toString() : '';
 
     const response = await fetch(`${this.path}/${args}`, options);
     return response.json();
@@ -120,7 +120,6 @@ export default class API {
   }
 
   service(service) {
-    this.service = service;
     this.path = `${this.apiUrl}/${service}`;
     this.rest.configure({
       path: this.path,
@@ -153,6 +152,8 @@ export default class API {
     };
     this.rest.configure({path: this.path, accessToken: this.accessToken});
     const result = await this.rest.create(data);
+    this.accessToken = result.accessToken;
+    this.user = result.user;
     return result;
   }
 
@@ -163,5 +164,9 @@ export default class API {
     this.rest.configure({path: this.path, accessToken: this.accessToken});
     const result = await this.rest.remove();
     return result;
+  }
+
+  getUser() {
+    return this.user;
   }
 }
